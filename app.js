@@ -72,10 +72,12 @@ io.on('connection', function(socket) {
 
     socket.on('user connection', function(msg) {
         msg=xss(msg);
-        console.log(msg);
+        let avatar=Math.floor(Math.random()*10+1);
+        console.log(avatar);
         users.push({
             id: socket.id,
-            name: msg
+            name: msg,
+            avatar: avatar
         })
         console.log(users);
         io.sockets.emit('hi', msg + '加入聊天室 当前在线人数 ' + users.length);
