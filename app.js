@@ -27,7 +27,15 @@ const app = express();
 
 const server=app.listen(3000);
 const io=require('socket.io').listen(server);
-
+// 防范XSS
+const xss = function (a) {
+  return String(a)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+};
 // 设置模板引擎
 app.set('views', path.join(__dirname, 'views'));
 app.engine('handlebars', handlebars({ defaultLayout: 'mainlayout' }));
@@ -63,12 +71,14 @@ app.use(function(req, res) {
 io.on('connection', function(socket) {
 
     socket.on('user connection', function(msg) {
+        msg=xss(msg);
+        console.log(msg);
         users.push({
             id: socket.id,
             name: msg
         })
         console.log(users);
-        io.sockets.emit('hi', msg + '加入聊天室\n当前在线人数 ' + users.length);
+        io.sockets.emit('hi', msg + '加入聊天室 当前在线人数 ' + users.length);
     });
 
     socket.on('disconnect', function() {
@@ -80,7 +90,7 @@ io.on('connection', function(socket) {
             _.remove(users, function(u) {
                 return u.id == socket.id;
             })
-            io.sockets.emit('hi', _user.name + '离开了聊天室\n当前在线人数' + users.length);
+            io.sockets.emit('hi', _user.name + '离开了聊天室 当前在线人数' + users.length);
         }
     });
 
@@ -99,5 +109,6 @@ io.on('connection', function(socket) {
     });
 
 });
+
 
 module.exports = app;
