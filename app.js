@@ -21,6 +21,7 @@ const md = new MarkdownIt({
 });
 let users=[];
 const routes = require('./routes/index');
+// const notFound =require('./routes/404');
 
 const app = express();
 
@@ -47,6 +48,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 
+// 定制404页面
+app.use(function(req, res) {
+    res.status(404);
+    res.render('404',{ title: '路径错啦' })
+});
+
+app.use(function(req, res) {
+    console.error(err.stack);
+    res.status(500);
+    res.render('error',{title:'服务器内部错误啦'});
+});
 
 io.on('connection', function(socket) {
 
@@ -55,7 +67,8 @@ io.on('connection', function(socket) {
             id: socket.id,
             name: msg
         })
-        io.sockets.emit('hi', msg + '加入聊天室\n当前在线人数' + users.length);
+        console.log(users);
+        io.sockets.emit('hi', msg + '加入聊天室\n当前在线人数 ' + users.length);
     });
 
     socket.on('disconnect', function() {
