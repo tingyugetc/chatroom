@@ -75,6 +75,12 @@ li .chat{
 	border-right: 1.8rem solid #fff;
 	border-bottom: .2rem solid transparent;
 }
+.users-in-out{
+    text-align: center;
+}
+.whisper-color{
+    background-color: #9e9e9e;
+}
 </style>
 
 
@@ -93,41 +99,84 @@ li .chat{
 <form>
      <input id="m" autocomplete="off" /><button>发送</button>
 </form>
+<script src="/js/layer/layer.js"></script>
 <script src="//cdn.bootcss.com/socket.io/1.4.6/socket.io.min.js"></script>
 	
 <script>
     $(function(){
-        var name = prompt("输入昵称");
-        if($.trim(name).length > 0) {
+        //prompt层
+        layer.prompt({title: '请输入昵称',offset: ['200px', '400px']}, function(value,index){
+            layer.close(index);
+            var name=value;
+            if($.trim(name).length > 0) {
             $('#m').focus();
             // 聊天开始
             var socket = io();
-            // 
+            // 定义一个私聊公聊的变量吧
+
             socket.emit('user connection', name);
             $('button').click(function(){
                 socket.emit('chat message', $('#m').val());
                 $('#m').val('');
+                // return 去掉的话，页面会刷新
                 return false;
             });
+            // 头像点击事件 ，直接开始私聊
+            $('body').on('click','.avatar',function(){
+                var socket_id=$(this).data('id');
+                socket.emit('whisper-first',socket_id);
+            });
+            // 接收到服务器的消息，被请求的客户端有个confirm
+            socket.on('whisper-second',function(msg){
+                layer.confirm('有个叫'+msg.user.name+'的人想和你私聊，是否同意？', function(index){
+                    layer.close(index);
+                    // 同意，先发送同意消息，然后打开一个聊天的layer
+                    socket.emit('whisper-third',{
+                        to:msg.to,
+                        from:msg.from
+                    });
+                });  
+            });
+            socket.on('whisper-forth',function(msg){
+
+                layer.alert(msg.user.name+'已经同意了你的私聊请求');
+            })
+            // // 
+            // // 收到不是本人的私聊消息
+            // socket.on('whisper-first',function(msg){
+            //     console.log(msg);
+            //     var a=msg.split('-');
+            //     var con=confirm('有个来自外星球的人想和你聊天');
+            //     if(con===true){
+            //         $('#m').focus();
+            //         $('body').css('background-color','#9e9e9e');
+            //         socket.broadcast.to(a[2])emit('whisper-second',a[1]);
+            //     }else {
+            //         return false;
+            //     }
+            // });
             socket.on('chat message', function(msg){
                 $('#messages').append(
-                	'<li>'+
-					'<div class="avatar">'+
-					'<img src="imgs/'+msg.user.avatar+'.jpg" alt="头像" />'+
-					'<p class="name">'+msg.user.name+'<p>'+
-					'</div>'+
-					'<div class="chat">'+
-					'<span class="tan"></span>'+
-					'<p>'+msg.msg+'</p>'+
-					'</div>'+
-					'</li>');
-            	$('html, body, #message').animate({scrollTop: $(document).height()}, 400);
-          	});
+                    '<li>'+
+                    '<div class="avatar" data-id="'+msg.user.id+'">'+
+                    '<img src="imgs/'+msg.user.avatar+'.jpg" alt="头像" />'+
+                    '<p class="name">'+msg.user.name+'<p>'+
+                    '</div>'+
+                    '<div class="chat">'+
+                    '<span class="tan"></span>'+
+                    '<p>'+msg.msg+'</p>'+
+                    '</div>'+
+                    '</li>');
+                $('html, body, #message').animate({scrollTop: $(document).height()}, 400);
+            });
             socket.on('hi', function(msg){
-                $('#messages').append($('<li style="text-align: center;">').text(msg));
+                // console.log(msg);
+                $('#messages').append($('<li class="users-in-out">').text(msg));
                 $('html, body, #message').animate({scrollTop: $(document).height()}, 400);
             });
         }
+        });
+        
 
     });
 </script>
