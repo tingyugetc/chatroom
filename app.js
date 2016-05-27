@@ -110,34 +110,90 @@ io.on('connection', function(socket) {
         }
     });
     // first是from的服务器接收到的
-    socket.on('whisper-first',function(msg){
+    socket.on('whisper-first', function(msg) {
         // 说明是其他客户端的消息
-        if(msg!==socket.id){
+        if (msg !== socket.id) {
             let i = _.findIndex(users, {
                 id: socket.id
             });
-            if(i>=0){
+            if (i >= 0) {
                 socket.broadcast.to(msg).emit('whisper-second', {
-                    to:msg,
-                    from:socket.id,
-                    user:users[i],
-                 });
+                    to: msg,
+                    from: socket.id,
+                    user: users[i],
+                });
             }
-            
+
         }
     });
     // third是只有from的服务器才会接收到
-    socket.on('whisper-third',function(msg){
+    socket.on('whisper-third', function(msg) {
 
         // 同意进行私聊后，给from的人发送消息，连接开始
         let i = _.findIndex(users, {
-                id: msg.to
+            id: msg.to
+        });
+        if (i >= 0) {
+            socket.broadcast.to(msg.from).emit('whisper-forth', {
+                to: msg.to,
+                from: msg.from,
+                user: users[i]
             });
-        if(i>=0){
-            socket.broadcast.to(msg.from).emit('whisper-forth',{
-                to:msg.to,
-                from:msg.from,
-                user:users[i]
+        }
+    });
+
+    // fifth 是只有to的服务器才能接收到
+    socket.on('whisper-fifth', function(msg) {
+        // to 的服务器接到后，发给from
+        let i = _.findIndex(users, {
+            id: msg.to
+        });
+        if (i >= 0) {
+            socket.broadcast.to(msg.from).emit('whisper-sixth', {
+                to: msg.to,
+                from: msg.from,
+                msg: md.render(msg.chatMsg),
+                user: users[i]
+            });
+        }
+        // 于此同时 to的服务器也给to 的客户端发送一份
+        let j = _.findIndex(users, {
+            id: msg.from
+        });
+        if (j >= 0) {
+            socket.broadcast.to(msg.to).emit('whisper-ninth', {
+                to: msg.to,
+                from: msg.from,
+                msg: md.render(msg.chatMsg),
+                user: users[j]
+            });
+        }
+    });
+
+    // seventh 是只有from的服务器才能接收到
+    // from的服务器接到后，发给to
+    socket.on('whisper-seventh', function(msg) {
+        let i = _.findIndex(users, {
+            id: msg.from
+        });
+        if (i >= 0) {
+            socket.broadcast.to(msg.to).emit('whisper-ninth', {
+                to: msg.to,
+                from: msg.from,
+                msg: md.render(msg.chatMsg),
+                user: users[i]
+            });
+        }
+        // 于此同时 from的服务器也给from 的客户端发送一份
+        let j = _.findIndex(users, {
+            id: msg.to
+        });
+        if (j >= 0) {
+            socket.broadcast.to(msg.from).emit('whisper-sixth', {
+                to: msg.to,
+                from: msg.from,
+                msg: md.render(msg.chatMsg),
+                user: users[j]
             });
         }
     });
