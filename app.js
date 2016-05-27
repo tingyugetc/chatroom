@@ -144,58 +144,53 @@ io.on('connection', function(socket) {
 
     // fifth 是只有to的服务器才能接收到
     socket.on('whisper-fifth', function(msg) {
-        // to 的服务器接到后，发给from
+        // 找到to这个人
         let i = _.findIndex(users, {
             id: msg.to
         });
         if (i >= 0) {
+            // to 的服务器接到后，发给from
             socket.broadcast.to(msg.from).emit('whisper-sixth', {
                 to: msg.to,
                 from: msg.from,
                 msg: md.render(msg.chatMsg),
                 user: users[i]
             });
-        }
-        // 于此同时 to的服务器也给to 的客户端发送一份
-        let j = _.findIndex(users, {
-            id: msg.from
-        });
-        if (j >= 0) {
-            socket.broadcast.to(msg.to).emit('whisper-ninth', {
+            // 于此同时 to的服务器也给to 的客户端发送一份
+            socket.emit('whisper-sixth', {
                 to: msg.to,
                 from: msg.from,
                 msg: md.render(msg.chatMsg),
-                user: users[j]
+                user: users[i]
             });
         }
+        
     });
 
     // seventh 是只有from的服务器才能接收到
     // from的服务器接到后，发给to
     socket.on('whisper-seventh', function(msg) {
+        // 找到from这个人
         let i = _.findIndex(users, {
             id: msg.from
         });
         if (i >= 0) {
-            socket.broadcast.to(msg.to).emit('whisper-ninth', {
+            // from的服务器发送给to的客户端
+            socket.broadcast.to(msg.to).emit('whisper-sixth', {
+                to: msg.to,
+                from: msg.from,
+                msg: md.render(msg.chatMsg),
+                user: users[i]
+            });
+            // 于此同时 from的服务器也给from 的客户端发送一份
+            socket.emit('whisper-sixth', {
                 to: msg.to,
                 from: msg.from,
                 msg: md.render(msg.chatMsg),
                 user: users[i]
             });
         }
-        // 于此同时 from的服务器也给from 的客户端发送一份
-        let j = _.findIndex(users, {
-            id: msg.to
-        });
-        if (j >= 0) {
-            socket.broadcast.to(msg.from).emit('whisper-sixth', {
-                to: msg.to,
-                from: msg.from,
-                msg: md.render(msg.chatMsg),
-                user: users[j]
-            });
-        }
+        
     });
 
 });

@@ -14,7 +14,7 @@ padding-bottom: 46px;
 .m input,
 .s input { 
     border: 0; 
-    padding: 10px; 
+    padding: .625rem; 
     width: 90%; 
     margin-right: .3rem; 
 }
@@ -30,19 +30,24 @@ padding-bottom: 46px;
     margin: 0; 
     padding: 0; 
 }
-#messages li { 
+#messages li ,
+#si li{ 
     padding: .3125rem .625rem; 
 }
-#messages li:nth-child(odd) .chat{ 
+#messages li:nth-child(odd) .chat,
+#si li:nth-child(odd) .chat{ 
     background-color: #eee; 
 }
-#messages li:nth-child(even) .chat{
+#messages li:nth-child(even) .chat,
+#si li:nth-child(even) .chat{
 	background-color: #d4edf4;
 }
-#messages li:nth-child(odd) .tan{
+#messages li:nth-child(odd) .tan,
+#si li:nth-child(odd) .tan{
 	 border-right-color: #eee;
 }
-#messages li:nth-child(even) .tan{
+#messages li:nth-child(even) .tan,
+#si li:nth-child(even) .tan{
 	 border-right-color: #d4edf4;
 }
 .name{
@@ -206,20 +211,20 @@ li .chat{
                 $('.layui-layer-content').animate({scrollTop: $(document).height()}, 400);
             });
             // ninth是to的窗口
-            socket.on('whisper-ninth',function(msg){
-                $('#si').append(
-                    '<li>'+
-                    '<div class="avatar" data-id="'+msg.user.id+'">'+
-                    '<img src="imgs/'+msg.user.avatar+'.jpg" alt="头像" />'+
-                    '<p class="name">'+msg.user.name+'<p>'+
-                    '</div>'+
-                    '<div class="chat">'+
-                    '<span class="tan"></span>'+
-                    '<p>'+msg.msg+'</p>'+
-                    '</div>'+
-                    '</li>');
-                $('.layui-layer-content').animate({scrollTop: $(document).height()}, 400);
-            });
+            // socket.on('whisper-ninth',function(msg){
+            //     $('#si').append(
+            //         '<li>'+
+            //         '<div class="avatar" data-id="'+msg.user.id+'">'+
+            //         '<img src="imgs/'+msg.user.avatar+'.jpg" alt="头像" />'+
+            //         '<p class="name">'+msg.user.name+'<p>'+
+            //         '</div>'+
+            //         '<div class="chat">'+
+            //         '<span class="tan"></span>'+
+            //         '<p>'+msg.msg+'</p>'+
+            //         '</div>'+
+            //         '</li>');
+            //     $('.layui-layer-content').animate({scrollTop: $(document).height()}, 400);
+            // });
             // 开始公开聊天
             socket.on('chat message', function(msg){
                 $('#messages').append(
