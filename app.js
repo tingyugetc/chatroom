@@ -193,6 +193,33 @@ io.on('connection', function(socket) {
         
     });
 
+    // eighteen 是to方关闭窗口时to方服务器接收到的
+    socket.on('whisper-eighth',function(msg){
+        let i = _.findIndex(users, {
+            id: msg.to
+        });
+        if(i>=0){
+            socket.broadcast.to(msg.from).emit('whisper-ninth',{
+                to:msg.to,
+                from:msg.from,
+                user:users[i],
+            });
+        }
+    });
+
+    // tenth 是from方关闭时from方服务器接收到的
+    socket.on('whisper-tenth',function(msg){
+        let i = _.findIndex(users, {
+            id: msg.from
+        });
+        if(i>=0){
+            socket.broadcast.to(msg.to).emit('whisper-ninth',{
+                to:msg.to,
+                from:msg.from,
+                user:users[i],
+            });
+        }
+    });
 });
 
 
