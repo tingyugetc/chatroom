@@ -105,7 +105,7 @@ li .chat{
 <script>
     $(function(){
         //prompt层
-        layer.prompt({title: '请输入昵称',offset: ['200px', '400px']}, function(value,index){
+        layer.prompt({title: '请输入昵称',offset: ['200px', '400px'],skin: 'layui-layer-lan'}, function(value,index){
             layer.close(index);
             var name=value;
             if($.trim(name).length > 0) {
@@ -127,20 +127,43 @@ li .chat{
                 socket.emit('whisper-first',socket_id);
             });
             // 接收到服务器的消息，被请求的客户端有个confirm
+            // second是to的窗口
             socket.on('whisper-second',function(msg){
-                layer.confirm('有个叫'+msg.user.name+'的人想和你私聊，是否同意？', function(index){
+                layer.confirm('有个叫'+msg.user.name+'的人想和你私聊，是否同意？', {skin: 'layui-layer-lan' },function(index){
                     layer.close(index);
                     // 同意，先发送同意消息，然后打开一个聊天的layer
                     socket.emit('whisper-third',{
                         to:msg.to,
                         from:msg.from
                     });
+                    layer.open({
+                        type: 1,
+                        title: msg.user.name,
+                        move: false,
+                        skin: 'layui-layer-lan', //加上边框
+                        shift: 2,
+                        content: '',
+                    });
                 });  
             });
+            // forth是from的窗口
             socket.on('whisper-forth',function(msg){
 
-                layer.alert(msg.user.name+'已经同意了你的私聊请求');
-            })
+                layer.alert(msg.user.name+'已经同意了你的私聊请求',{
+                    time:3000,
+                    skin: 'layui-layer-lan',
+                });
+
+                // 打开一个私聊窗口，里面只有from和to两个人
+                layer.open({
+                     type: 1,
+                        title: msg.user.name,
+                        move: false,
+                        skin: 'layui-layer-lan', //加上边框
+                        shift: 2,
+                        content: '',
+                    });
+            });
             // // 
             // // 收到不是本人的私聊消息
             // socket.on('whisper-first',function(msg){

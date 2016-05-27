@@ -109,12 +109,12 @@ io.on('connection', function(socket) {
             }
         }
     });
-
+    // first是from的服务器接收到的
     socket.on('whisper-first',function(msg){
         // 说明是其他客户端的消息
         if(msg!==socket.id){
             let i = _.findIndex(users, {
-                id: msg
+                id: socket.id
             });
             if(i>=0){
                 socket.broadcast.to(msg).emit('whisper-second', {
@@ -126,6 +126,7 @@ io.on('connection', function(socket) {
             
         }
     });
+    // third是只有from的服务器才会接收到
     socket.on('whisper-third',function(msg){
 
         // 同意进行私聊后，给from的人发送消息，连接开始
