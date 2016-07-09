@@ -109,7 +109,7 @@ li .chat{
      <input id="m" autocomplete="off" /><button>发送</button>
 </form>
 <script src="/js/layer/layer.js"></script>
-<script src="//cdn.bootcss.com/socket.io/1.4.6/socket.io.min.js"></script>
+<script src="http://cdn.bootcss.com/socket.io/1.4.6/socket.io.min.js"></script>
 	
 <script>
     $(function(){
@@ -146,18 +146,18 @@ li .chat{
             // 头像点击事件 ，直接开始私聊
             $('body').on('click','#messages .avatar',function(){
                 var socket_id=$(this).data('id');
-                socket.emit('whisper-first',socket_id);
+                socket.emit('whisper-1',socket_id);
             });
 
             // 接收到服务器的消息，被请求的客户端有个confirm
             // second是to的窗口
-            socket.on('whisper-second',function(msg){
+            socket.on('whisper-2',function(msg){
                 layer.confirm('有个叫'+msg.user.name+'的人想和你私聊，是否同意？', {
                     skin: 'layui-layer-lan',
                 },function(index){
                     layer.close(index);
                     // 同意，先发送同意消息，然后打开一个聊天的layer
-                    socket.emit('whisper-third',{
+                    socket.emit('whisper-3',{
                         to:msg.to,
                         from:msg.from
                     });
@@ -172,7 +172,7 @@ li .chat{
                         content: '<ul id="si"><li class="users-in-out">你们的私聊已经开始</li></ul><form class="s"><input id="s" autocomplete="off" /><button>发送</button></form>',
                         success:function(){
                             $('.s button').click(function(){
-                                socket.emit('whisper-fifth',{
+                                socket.emit('whisper-5',{
                                     to:msg.to,
                                     from:msg.from,
                                     chatMsg:$('#s').val(),
@@ -183,7 +183,7 @@ li .chat{
                         },
                         // 如果to方关闭
                         end:function(){
-                            socket.emit('whisper-eighth',{
+                            socket.emit('whisper-8',{
                                 to:msg.to,
                                 from:msg.from
                             });
@@ -192,7 +192,7 @@ li .chat{
                 });  
             });
             // forth是from的窗口
-            socket.on('whisper-forth',function(msg){
+            socket.on('whisper-4',function(msg){
 
                 // 打开一个私聊窗口，里面只有from和to两个人
                 layer.open({
@@ -205,7 +205,7 @@ li .chat{
                     content: '<ul id="si"><li class="users-in-out">你们的私聊已经开始</li></ul><form class="s"><input id="s" autocomplete="off" /><button>发送</button></form>',
                     success:function(){
                         $('.s button').click(function(){
-                            socket.emit('whisper-seventh',{
+                            socket.emit('whisper-7',{
                                 to:msg.to,
                                 from:msg.from,
                                 chatMsg:$('#s').val(),
@@ -216,7 +216,7 @@ li .chat{
                     },
                     // 如果from方关闭
                     end:function(){
-                        socket.emit('whisper-tenth',{
+                        socket.emit('whisper-10',{
                             to:msg.to,
                             from:msg.from
                         });
@@ -224,7 +224,7 @@ li .chat{
                 });
             });
             // sixth是接收到服务器的消息，然后展现在私聊框的，不管有自己的还是别人的
-            socket.on('whisper-sixth',function(msg){
+            socket.on('whisper-6',function(msg){
                 $('#si').append(
                     '<li>'+
                     '<div class="avatar" data-id="'+msg.user.id+'">'+
@@ -239,7 +239,7 @@ li .chat{
                 $('.layui-layer-content').animate({scrollTop: $(document).height()}, 400);
             });
             // ninth是当有一方关闭窗口时，另一方接收到的消息
-            socket.on('whisper-ninth',function(msg){
+            socket.on('whisper-9',function(msg){
                 $('#si').append($('<li class="users-in-out">').text(msg.user.name+' 已经退出了私聊'));
                 $('.layui-layer-content').animate({scrollTop: $(document).height()}, 400);
             });

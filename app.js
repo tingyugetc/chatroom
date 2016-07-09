@@ -110,14 +110,14 @@ io.on('connection', function(socket) {
         }
     });
     // first是from的服务器接收到的
-    socket.on('whisper-first', function(msg) {
+    socket.on('whisper-1', function(msg) {
         // 说明是其他客户端的消息
         if (msg !== socket.id) {
             let i = _.findIndex(users, {
                 id: socket.id
             });
             if (i >= 0) {
-                socket.broadcast.to(msg).emit('whisper-second', {
+                socket.broadcast.to(msg).emit('whisper-2', {
                     to: msg,
                     from: socket.id,
                     user: users[i],
@@ -127,14 +127,14 @@ io.on('connection', function(socket) {
         }
     });
     // third是只有from的服务器才会接收到
-    socket.on('whisper-third', function(msg) {
+    socket.on('whisper-3', function(msg) {
 
         // 同意进行私聊后，给from的人发送消息，连接开始
         let i = _.findIndex(users, {
             id: msg.to
         });
         if (i >= 0) {
-            socket.broadcast.to(msg.from).emit('whisper-forth', {
+            socket.broadcast.to(msg.from).emit('whisper-4', {
                 to: msg.to,
                 from: msg.from,
                 user: users[i]
@@ -143,21 +143,21 @@ io.on('connection', function(socket) {
     });
 
     // fifth 是只有to的服务器才能接收到
-    socket.on('whisper-fifth', function(msg) {
+    socket.on('whisper-5', function(msg) {
         // 找到to这个人
         let i = _.findIndex(users, {
             id: msg.to
         });
         if (i >= 0) {
             // to 的服务器接到后，发给from
-            socket.broadcast.to(msg.from).emit('whisper-sixth', {
+            socket.broadcast.to(msg.from).emit('whisper-6', {
                 to: msg.to,
                 from: msg.from,
                 msg: md.render(msg.chatMsg),
                 user: users[i]
             });
             // 于此同时 to的服务器也给to 的客户端发送一份
-            socket.emit('whisper-sixth', {
+            socket.emit('whisper-6', {
                 to: msg.to,
                 from: msg.from,
                 msg: md.render(msg.chatMsg),
@@ -169,21 +169,21 @@ io.on('connection', function(socket) {
 
     // seventh 是只有from的服务器才能接收到
     // from的服务器接到后，发给to
-    socket.on('whisper-seventh', function(msg) {
+    socket.on('whisper-7', function(msg) {
         // 找到from这个人
         let i = _.findIndex(users, {
             id: msg.from
         });
         if (i >= 0) {
             // from的服务器发送给to的客户端
-            socket.broadcast.to(msg.to).emit('whisper-sixth', {
+            socket.broadcast.to(msg.to).emit('whisper-6', {
                 to: msg.to,
                 from: msg.from,
                 msg: md.render(msg.chatMsg),
                 user: users[i]
             });
             // 于此同时 from的服务器也给from 的客户端发送一份
-            socket.emit('whisper-sixth', {
+            socket.emit('whisper-6', {
                 to: msg.to,
                 from: msg.from,
                 msg: md.render(msg.chatMsg),
@@ -194,12 +194,12 @@ io.on('connection', function(socket) {
     });
 
     // eighteen 是to方关闭窗口时to方服务器接收到的
-    socket.on('whisper-eighth',function(msg){
+    socket.on('whisper-8',function(msg){
         let i = _.findIndex(users, {
             id: msg.to
         });
         if(i>=0){
-            socket.broadcast.to(msg.from).emit('whisper-ninth',{
+            socket.broadcast.to(msg.from).emit('whisper-9',{
                 to:msg.to,
                 from:msg.from,
                 user:users[i],
@@ -208,12 +208,12 @@ io.on('connection', function(socket) {
     });
 
     // tenth 是from方关闭时from方服务器接收到的
-    socket.on('whisper-tenth',function(msg){
+    socket.on('whisper-10',function(msg){
         let i = _.findIndex(users, {
             id: msg.from
         });
         if(i>=0){
-            socket.broadcast.to(msg.to).emit('whisper-ninth',{
+            socket.broadcast.to(msg.to).emit('whisper-9',{
                 to:msg.to,
                 from:msg.from,
                 user:users[i],
