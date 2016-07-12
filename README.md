@@ -6,15 +6,26 @@
 # 运行
 	node app.js
 
+# 预览地址
+[http://socket.fengyuanzemin.com](http://socket.fengyuanzemin.com)
+
 # 技术
 
 使用express+socket.io
 
 ```js
-io.emit('login',{'onlineList':onlineList,'onlineCount':onlineCount,'user':obj.name});//通知所有人，包括当前用户
-socket.emit('test',{'msg':"11"});//给当前用户发信息
-socket.broadcast.emit('other');//给除了当前连接以外的所有人发信息
-socket.send('hi');//message接收,对于当前用户，相当于socket.emit('message',{'msg':"11"});
+// 通知所有人，包括当前用户
+io.emit('login',{'onlineList':onlineList});
+
+//给当前用户发信息
+socket.emit('test',{'msg':"11"});
+
+//message接收,对于当前用户，相当于socket.emit('message',{'msg':"11"});
+socket.send('hi');
+
+//给除了当前连接以外的所有人发信息
+socket.broadcast.emit('other');
+
 socket.on('login',function(obj){
     //服务器端监听客户端发送的信息，并做处理
 });
@@ -31,3 +42,7 @@ socket.on('login',function(obj){
 * 自己的气泡固定一种颜色，别人的随机颜色。后面可以选择颜色
 * 聊天记录MongoDB
 * 可以选择头像
+* 未进行空字符验证
+* 使用Webpack进行自动化构建
+* 使用Vue.js
+* 使用ES6

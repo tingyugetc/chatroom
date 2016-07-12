@@ -28,14 +28,12 @@ const app = express();
 const server = app.listen(3000);
 const io = require('socket.io').listen(server);
 // 防范XSS
-const xss = function(a) {
-    return String(a)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-};
+const xss = a => String(a).replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
 // 设置模板引擎
 app.set('views', path.join(__dirname, 'views'));
 app.engine('handlebars', handlebars({ defaultLayout: 'mainlayout' }));
@@ -57,20 +55,22 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 
 // 定制404页面
-app.use(function(req, res) {
+
+app.use((req, res) => {
     res.status(404);
-    res.render('404', { title: '路径错啦' })
+    res.render('404', { title: '路径错啦' });
 });
 
-app.use(function(req, res) {
+// 定制500页面
+app.use((req, res) => {
     console.error(err.stack);
     res.status(500);
     res.render('error', { title: '服务器内部错误啦' });
 });
 
-io.on('connection', function(socket) {
+io.on('connection', socket => {
 
-    socket.on('user connection', function(msg) {
+    socket.on('user connection', msg => {
         // 有一个客户端建立连接后，就把该用户加入数组里
         msg = xss(msg);
         let avatar = Math.floor(Math.random() * 13 + 1);
@@ -82,7 +82,7 @@ io.on('connection', function(socket) {
         io.emit('hi', msg + ' 加入聊天室 当前在线人数 ' + users.length);
     });
 
-    socket.on('disconnect', function() {
+    socket.on('disconnect', () => {
         // 断开连接后，就把它从数组里面删掉
         let i = _.findIndex(users, {
             id: socket.id
@@ -96,7 +96,7 @@ io.on('connection', function(socket) {
         }
     });
 
-    socket.on('chat message', function(msg) {
+    socket.on('chat message', msg => {
         if (msg) {
             let i = _.findIndex(users, {
                 id: socket.id
@@ -110,7 +110,7 @@ io.on('connection', function(socket) {
         }
     });
     // first是from的服务器接收到的
-    socket.on('whisper-1', function(msg) {
+    socket.on('whisper-1', msg => {
         // 说明是其他客户端的消息
         if (msg !== socket.id) {
             let i = _.findIndex(users, {
@@ -127,7 +127,7 @@ io.on('connection', function(socket) {
         }
     });
     // third是只有from的服务器才会接收到
-    socket.on('whisper-3', function(msg) {
+    socket.on('whisper-3', msg => {
 
         // 同意进行私聊后，给from的人发送消息，连接开始
         let i = _.findIndex(users, {
@@ -143,7 +143,7 @@ io.on('connection', function(socket) {
     });
 
     // fifth 是只有to的服务器才能接收到
-    socket.on('whisper-5', function(msg) {
+    socket.on('whisper-5', msg => {
         // 找到to这个人
         let i = _.findIndex(users, {
             id: msg.to
@@ -164,12 +164,12 @@ io.on('connection', function(socket) {
                 user: users[i]
             });
         }
-        
+
     });
 
     // seventh 是只有from的服务器才能接收到
     // from的服务器接到后，发给to
-    socket.on('whisper-7', function(msg) {
+    socket.on('whisper-7', msg => {
         // 找到from这个人
         let i = _.findIndex(users, {
             id: msg.from
@@ -190,33 +190,33 @@ io.on('connection', function(socket) {
                 user: users[i]
             });
         }
-        
+
     });
 
     // eighteen 是to方关闭窗口时to方服务器接收到的
-    socket.on('whisper-8',function(msg){
+    socket.on('whisper-8', msg => {
         let i = _.findIndex(users, {
             id: msg.to
         });
-        if(i>=0){
-            socket.broadcast.to(msg.from).emit('whisper-9',{
-                to:msg.to,
-                from:msg.from,
-                user:users[i],
+        if (i >= 0) {
+            socket.broadcast.to(msg.from).emit('whisper-9', {
+                to: msg.to,
+                from: msg.from,
+                user: users[i],
             });
         }
     });
 
     // tenth 是from方关闭时from方服务器接收到的
-    socket.on('whisper-10',function(msg){
+    socket.on('whisper-10', msg => {
         let i = _.findIndex(users, {
             id: msg.from
         });
-        if(i>=0){
-            socket.broadcast.to(msg.to).emit('whisper-9',{
-                to:msg.to,
-                from:msg.from,
-                user:users[i],
+        if (i >= 0) {
+            socket.broadcast.to(msg.to).emit('whisper-9', {
+                to: msg.to,
+                from: msg.from,
+                user: users[i],
             });
         }
     });
