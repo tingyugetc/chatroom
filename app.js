@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const path = require('path');
 // 用于提升加载favicon性能的中间件
@@ -23,6 +25,8 @@ let users = [];
 const routes = require('./routes/index');
 // const notFound =require('./routes/404');
 
+
+
 const app = express();
 
 const server = app.listen(3000);
@@ -35,9 +39,11 @@ const xss = a => String(a).replace(/&/g, "&amp;")
     .replace(/'/g, "&#39;");
 
 // 设置模板引擎
-app.set('views', path.join(__dirname, 'views'));
-app.engine('handlebars', handlebars({ defaultLayout: 'mainlayout' }));
+console.log(__dirname);
+app.set('views', path.join(__dirname, 'app/views/'));
 app.set('view engine', "handlebars");
+app.engine('handlebars', handlebars({ defaultLayout: 'mainlayout' ,layoutsDir: __dirname + '/app/views/layouts/'}));
+
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

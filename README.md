@@ -6,7 +6,10 @@
 # 运行
 	node app.js
 
-# 预览地址
+# 调试方式运行
+	DEBUG=express:application node app.js
+
+# 演示地址
 [http://socket.fengyuanzemin.com](http://socket.fengyuanzemin.com)
 
 # 技术
@@ -42,7 +45,6 @@ socket.on('login',function(obj){
 * 自己的气泡固定一种颜色，别人的随机颜色。后面可以选择颜色
 * 聊天记录MongoDB
 * 可以选择头像
-* 未进行空字符验证
 * 使用Webpack进行自动化构建
 * 使用Vue.js
 * 使用ES6
