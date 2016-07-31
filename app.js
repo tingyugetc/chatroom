@@ -34,12 +34,25 @@ const xss = a => String(a).replace(/&/g, '&amp;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 
+// // mongoose
+// const mongoose = require('mongoose');
+
+// const MessageSchema = mongoose.Schema({
+//     message: [{
+//         name: { type: String, default: '' },
+//         image: { type: String, default: '/imgs/1.jpg' },
+//         createdAt: { type: Date, default: Date.now },
+//         content: { type: String, default: '' },
+//     }],
+// });
+// const Message = mongoose.model('Message', MessageSchema);
+
 // 设置模板引擎
 app.set('views', path.join(__dirname, 'app/views/'));
 app.set('view engine', 'handlebars');
 app.engine('handlebars', handlebars({
     defaultLayout: 'mainlayout',
-    layoutsDir: __dirname + '/app/views/layouts/',
+    layoutsDir: `${__dirname}/app/views/layouts/`,
 }));
 
 // uncomment after placing your favicon in /public
@@ -73,14 +86,14 @@ app.use((req, res) => {
 io.on('connection', socket => {
     socket.on('user connection', msg => {
         // 有一个客户端建立连接后，就把该用户加入数组里
-        msg = xss(msg);
+        const m = xss(msg);
         const avatar = Math.floor(Math.random() * 13 + 1);
         users.push({
             id: socket.id,
-            name: msg,
-            avatar: avatar,
+            name: m,
+            avatar,
         });
-        io.emit('hi', msg + ' 加入聊天室 当前在线人数 ' + users.length);
+        io.emit('hi', `${m} 加入聊天室，当前在线人数 ${users.length}`);
     });
 
     socket.on('disconnect', () => {
@@ -91,7 +104,7 @@ io.on('connection', socket => {
         if (i >= 0) {
             const user = users[i];
             _.remove(users, (u) => u.id === socket.id);
-            io.emit('hi', user.name + ' 离开了聊天室 当前在线人数' + users.length);
+            io.emit('hi', `${user.name} 离开了聊天室，当前在线人数 ${users.length}`);
         }
     });
 
@@ -104,6 +117,24 @@ io.on('connection', socket => {
                 io.emit('chat message', {
                     user: users[i],
                     msg: md.render(msg),
+                });
+                // 存入mongoose
+                mongoose.connect('mongodb://localhost/socket');
+                const db = mongoose.connection;
+
+                db.on('error', console.error.bind(console, '连接错误:'));
+                db.once('open', () => {
+                    // 开始连接
+                    // const a = new ChatModel({ name: 'Silence' });
+                    // console.log(a.name); // 'Silence'
+                    Message.find({}, function(err, docs) {
+                        if (!err) {
+                            console.log(docs);
+                            // process.exit();
+                        } else {
+                            throw err;
+                        }
+                    });
                 });
             }
         }

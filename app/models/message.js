@@ -1,46 +1,50 @@
-'use strict';
-
-// // mongoDB
-const mongoose = require('mongoose');
-// mongoose.connect('mongodb://localhost/socket');
-// const db = mongoose.connection;
+// // // mongoDB
+// const mongoose = require('mongoose');
+// // mongoose.connect('mongodb://localhost/socket');
+// // const db = mongoose.connection;
 
 
-// Message Schema
+// // Message Schema
 
-const MessageSchema = mongoose.Schema({
-    name: { type: String, default: '' },
-    createdAt: { type: Date, default: Date.now },
-    content: { type: String, default: '' }
-});
+// const MessageSchema = mongoose.Schema({
+//     message: [{
+//         name: { type: String, default: '' },
+//         image: {},
+//         createdAt: { type: Date, default: Date.now },
+//         content: { type: String, default: '' },
+//     }],
+// });
 
 
 // Methods
 
+// MessageSchema.methods = {
 
-ArticleSchema.methods = {
+//     // Save message
 
-  // Save message
+//     // saveMessage: () => {
+//     //     this.save();
+//     // },
 
-  save: function () {
+//     // Add message
 
-  },
+//     addMessage: (name, content) => {
+//         this.message.push({
+//             name,
+//             content,
+//         });
+//         this.save();
+//     },
 
-  // Add message
+//     // Remove message
 
-  addMessage: function (user, comment) {
+//     // removeMessage: (messageId) => {
 
-  },
-
-  // Remove message
-
-  removeMessage: function (commentId) {
-
-  }
-};
+//     // },
+// };
 
 
-mongoose.model('Message', MessageSchema);
+// mongoose.model('Message', MessageSchema);
 // db.on('error', console.error.bind(console, '连接错误:'));
 // db.once('open', () => {
 //     // 开始连接
