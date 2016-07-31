@@ -35,17 +35,8 @@ const xss = a => String(a).replace(/&/g, '&amp;')
     .replace(/'/g, '&#39;');
 
 // // mongoose
-// const mongoose = require('mongoose');
-
-// const MessageSchema = mongoose.Schema({
-//     message: [{
-//         name: { type: String, default: '' },
-//         image: { type: String, default: '/imgs/1.jpg' },
-//         createdAt: { type: Date, default: Date.now },
-//         content: { type: String, default: '' },
-//     }],
-// });
-// const Message = mongoose.model('Message', MessageSchema);
+const mongoose = require('mongoose');
+const Message = mongoose.model('Message');
 
 // 设置模板引擎
 app.set('views', path.join(__dirname, 'app/views/'));
@@ -118,23 +109,21 @@ io.on('connection', socket => {
                     user: users[i],
                     msg: md.render(msg),
                 });
+                console.log(users[i].name);
+                console.log(`/imgs/${users[i].avatar}.jpg`);
+                console.log(msg);
                 // 存入mongoose
-                mongoose.connect('mongodb://localhost/socket');
-                const db = mongoose.connection;
-
-                db.on('error', console.error.bind(console, '连接错误:'));
-                db.once('open', () => {
-                    // 开始连接
-                    // const a = new ChatModel({ name: 'Silence' });
-                    // console.log(a.name); // 'Silence'
-                    Message.find({}, function(err, docs) {
-                        if (!err) {
-                            console.log(docs);
-                            // process.exit();
-                        } else {
-                            throw err;
-                        }
-                    });
+                // console.log(Message);
+                const a = new Message();
+                a.message.push({
+                    name: users[i].name,
+                    image: `/imgs/${users[i].avatar}.jpg`,
+                    content: msg,
+                })
+                console.log(a);
+                const promise = a.save();
+                promise.then(function(doc) {
+                    console.log('this fires after the `post` hook');
                 });
             }
         }

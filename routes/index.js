@@ -25,6 +25,7 @@ db.once('open', () => {
     Message.find({}, function(err, docs) {
         if (!err) {
             console.log(docs);
+            console.log(docs[0].message);
             // process.exit();
         } else {
             throw err;
