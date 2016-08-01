@@ -36,6 +36,8 @@ const xss = a => String(a).replace(/&/g, '&amp;')
 
 // // mongoose
 const mongoose = require('mongoose');
+// Use native promises
+mongoose.Promise = global.Promise;
 const Message = mongoose.model('Message');
 
 // 设置模板引擎

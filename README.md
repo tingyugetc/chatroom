@@ -3,11 +3,26 @@
 # 安装
 	npm install
 
+# 安装mongoDB
+要显示聊天记录
+
+[https://docs.mongodb.com/manual/installation/](https://docs.mongodb.com/manual/installation/)
+
 # 运行
 	node app.js
 
 # 调试方式运行
 	DEBUG=express:application node app.js
+
+# 服务器后台长时间运行
+需要守护进程forever
+
+## 安装
+	 [sudo] npm install forever -g
+## 运行
+	forever start app.js
+## 关闭
+	forever stop app.js
 
 # 演示地址
 [http://socket.fengyuanzemin.com](http://socket.fengyuanzemin.com)
