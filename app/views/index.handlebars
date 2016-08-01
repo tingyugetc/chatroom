@@ -1,17 +1,20 @@
 <link rel="stylesheet" href="/css/index.css">
 
 <ul id="messages">
-	{{!-- {{#each message}}
-    <li>
-		<div class="avatar">
-			<img src={{message.image}} alt="头像" />
-			<p class="name">{{message.name}}<p>
-		</div>
-		<div class="chat">
-			<span class="tan"></span>
-			<p>{{{message.content}}}</p>
-		</div>
-	</li> --}}
+	{{#each message}}
+        <li>
+    		<div class="avatar">
+    			<img src={{image}} alt="头像" />
+    			<p class="name">{{name}}</p>
+    		</div>
+    		<div class="chat">
+    			<span class="tan"></span>
+    			<p>{{{content}}}</p>
+    		</div>
+	    </li>
+    {{else}}
+        <li class="users-in-out">好像之前没有聊天记录</li>
+    {{/each}}
 </ul>
 <form class="m">
      <input id="m" autocomplete="off" /><button>发送</button>

@@ -1,46 +1,42 @@
 const express = require('express');
 const router = express.Router();
 
-
 // mongoose
 const mongoose = require('mongoose');
-
 const MessageSchema = mongoose.Schema({
-    message: [{
-        name: { type: String, default: '' },
-        image: { type: String, default: '/imgs/1.jpg' },
-        createdAt: { type: Date, default: Date.now },
-        content: { type: String, default: '' },
-    }],
+    name: { type: String, default: '' },
+    image: { type: String, default: '/imgs/1.jpg' },
+    createdAt: { type: Date, default: Date.now },
+    content: { type: String, default: '' },
 });
-const Message = mongoose.model('Message', MessageSchema);
+mongoose.model('Message', MessageSchema);
+const Message = mongoose.model('Message');
 mongoose.connect('mongodb://localhost/socket');
 const db = mongoose.connection;
 
 db.on('error', console.error.bind(console, '连接错误:'));
 db.once('open', () => {
     // 开始连接
-    // const a = new ChatModel({ name: 'Silence' });
-    // console.log(a.name); // 'Silence'
-    Message.find({}, function(err, docs) {
+});
+router.get('/', (req, res) => {
+    res.redirect('/chatroom');
+});
+router.get('/chatroom', (req, res) => {
+    Message.find({}, (err, docs) => {
         if (!err) {
-            console.log(docs);
-            console.log(docs[0].message);
-            // process.exit();
+            const mes = [];
+            docs.forEach(key => {
+                mes.push(key);
+            });
+            // 进入聊天室
+            res.render('index', {
+                title: '网络聊天室',
+                message: mes,
+            });
         } else {
             throw err;
         }
     });
-    /* GET home page. */
-    router.get('/', (req, res) => {
-        res.render('index', { title: '网络聊天室' });
-    });
-
 });
-
-
-
-
-
 
 module.exports = router;

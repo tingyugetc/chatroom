@@ -69,7 +69,6 @@ app.use((req, res) => {
 
 // 定制500页面
 app.use((req, res) => {
-    // console.error(err.stack);
     res.status(500);
     res.render('error', { title: '服务器内部错误啦' });
 });
@@ -105,25 +104,18 @@ io.on('connection', socket => {
                 id: socket.id,
             });
             if (i >= 0) {
-                io.emit('chat message', {
-                    user: users[i],
-                    msg: md.render(msg),
-                });
-                console.log(users[i].name);
-                console.log(`/imgs/${users[i].avatar}.jpg`);
-                console.log(msg);
                 // 存入mongoose
-                // console.log(Message);
-                const a = new Message();
-                a.message.push({
+                const a = new Message({
                     name: users[i].name,
                     image: `/imgs/${users[i].avatar}.jpg`,
                     content: msg,
-                })
-                console.log(a);
+                });
                 const promise = a.save();
-                promise.then(function(doc) {
-                    console.log('this fires after the `post` hook');
+                promise.then(() => {
+                    io.emit('chat message', {
+                        user: users[i],
+                        msg: md.render(msg),
+                    });
                 });
             }
         }
