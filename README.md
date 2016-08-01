@@ -1,12 +1,15 @@
 在线多人聊天室
 
 # 安装
+## 安装依赖
 	npm install
 
-# 安装mongoDB
+## 安装mongoDB
 要显示聊天记录
 
 [https://docs.mongodb.com/manual/installation/](https://docs.mongodb.com/manual/installation/)
+
+安装完毕之后新建一个叫`socket`的数据库
 
 # 运行
 	node app.js
@@ -58,8 +61,7 @@ socket.on('login',function(obj){
 
 * 像qq一样，自己的气泡在右边，别人的气泡在左边
 * 自己的气泡固定一种颜色，别人的随机颜色。后面可以选择颜色
-* 聊天记录MongoDB
 * 可以选择头像
 * 使用Webpack进行自动化构建
-* 使用Vue.js
+* 使用react
 * 使用ES6

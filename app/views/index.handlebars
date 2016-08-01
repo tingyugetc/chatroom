@@ -8,8 +8,9 @@
     			<p class="name">{{name}}</p>
     		</div>
     		<div class="chat">
-    			<span class="tan"></span>
-    			<p>{{{content}}}</p>
+                <p class="time">{{createdAt}}</p>
+{{!--     			<span class="tan"></span> --}}
+    			<p class="content">{{{content}}}</p>
     		</div>
 	    </li>
     {{else}}
@@ -169,8 +170,7 @@
                         '<p class="name">'+msg.user.name+'<p>'+
                         '</div>'+
                         '<div class="chat">'+
-                        '<span class="tan"></span>'+
-                        '<p>'+msg.msg+'</p>'+
+                        '<span class="tan"></span>'+ msg.msg+
                         '</div>'+
                         '</li>');
                     $('html, body, #message').animate({scrollTop: $(document).height()}, 400);
