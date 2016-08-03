@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const MessageSchema = mongoose.Schema({
     name: { type: String, default: '' },
     image: { type: String, default: '/imgs/1.jpg' },
-    createdAt: { type: Date, default: Date.now },
+    createdAt: { type: String, default: '' },
     content: { type: String, default: '' },
 });
 mongoose.model('Message', MessageSchema);

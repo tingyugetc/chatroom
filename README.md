@@ -38,17 +38,17 @@
 // 通知所有人，包括当前用户
 io.emit('login',{'onlineList':onlineList});
 
-//给当前用户发信息
+// 给当前用户发信息
 socket.emit('test',{'msg':"11"});
 
-//message接收,对于当前用户，相当于socket.emit('message',{'msg':"11"});
+// message接收,对于当前用户，相当于socket.emit('message',{'msg':"11"});
 socket.send('hi');
 
-//给除了当前连接以外的所有人发信息
+// 给除了当前连接以外的所有人发信息
 socket.broadcast.emit('other');
 
 socket.on('login',function(obj){
-    //服务器端监听客户端发送的信息，并做处理
+    // 服务器端监听客户端发送的信息，并做处理
 });
 ```
 

@@ -34,18 +34,29 @@ const xss = a => String(a).replace(/&/g, '&amp;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 
-// // mongoose
+function formatInsertTime() {
+    function format(raw) {
+        return raw.toString().length > 1 ? raw : `0${raw}`;
+    }
+    const weekSet = ['日', '一', '二', '三', '四', '五', '六'];
+    const raw = new Date();
+    const month = (raw.getMonth() + 1).toString().length > 1 ? raw.getMonth() + 1 : `0${raw.getMonth()+1}`;
+    const week = weekSet[raw.getDay()];
+    return `${raw.getFullYear()}年${month}月${format(raw.getDate())}日 星期${week} ${format(raw.getHours())}:${format(raw.getMinutes())}:${format(raw.getSeconds())}`;
+}
+
+// mongoose
 const mongoose = require('mongoose');
 // Use native promises
 mongoose.Promise = global.Promise;
 const Message = mongoose.model('Message');
 
 // 设置模板引擎
-app.set('views', path.join(__dirname, 'app/views/'));
+app.set('views', path.join(__dirname, 'views/'));
 app.set('view engine', 'handlebars');
 app.engine('handlebars', handlebars({
     defaultLayout: 'mainlayout',
-    layoutsDir: `${__dirname}/app/views/layouts/`,
+    layoutsDir: `${__dirname}/views/layouts/`,
 }));
 
 // uncomment after placing your favicon in /public
@@ -95,7 +106,7 @@ io.on('connection', socket => {
         });
         if (i >= 0) {
             const user = users[i];
-            _.remove(users, (u) => u.id === socket.id);
+            _.remove(users, u => u.id === socket.id);
             io.emit('hi', `${user.name} 离开了聊天室，当前在线人数 ${users.length}`);
         }
     });
@@ -111,6 +122,7 @@ io.on('connection', socket => {
                     name: users[i].name,
                     image: `/imgs/${users[i].avatar}.jpg`,
                     content: msg,
+                    createdAt: formatInsertTime(),
                 });
                 const promise = a.save();
                 promise.then(() => {

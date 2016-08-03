@@ -86,8 +86,6 @@ li .chat {
     flex: 0 1 auto;
 }
 
-
-
 .chat .content,
 .chat h1,
 .chat h2,
@@ -103,6 +101,11 @@ li .chat {
     font-weight: bold;
     padding: .9rem .9rem .1rem .9rem;
 }
+
+.chat p {
+    padding: .9rem;
+}
+
 .tan {
     border-top: .7rem solid transparent;
     border-right: 1.8rem solid #fff;
