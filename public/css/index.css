@@ -82,7 +82,7 @@ li .avatar {
 li .chat {
     border-radius: .4rem;
     display: flex;
-    -webkit-flex-flow: column;
+    flex-flow: column;
     flex: 0 1 auto;
     -webkit-flex:0 1 auto;
 }
