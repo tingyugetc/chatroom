@@ -129,6 +129,7 @@ io.on('connection', socket => {
                     io.emit('chat message', {
                         user: users[i],
                         msg: md.render(msg),
+                        createdAt: formatInsertTime(),
                     });
                 });
             }

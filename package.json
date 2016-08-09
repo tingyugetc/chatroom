@@ -5,6 +5,8 @@
   "scripts": {
     "start": "node ./bin/www"
   },
+  "description": "网络多人聊天室",
+  "author": "fengyuanzemin <fengyuanzemin@gmail.com> (http://blog.fengyuanzemin.com/)",
   "dependencies": {
     "body-parser": "^1.13.3",
     "cookie-parser": "^1.3.5",

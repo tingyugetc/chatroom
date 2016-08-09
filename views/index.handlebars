@@ -170,7 +170,7 @@
                         '<p class="name">'+msg.user.name+'<p>'+
                         '</div>'+
                         '<div class="chat">'+
-                        '<p class="time">'+formatInsertTime()+'</p>'+ msg.msg+
+                        '<p class="time">'+msg.createdAt+'</p>'+ msg.msg+
                         '</div>'+
                         '</li>');
                     $('html, body, #message').animate({scrollTop: $(document).height()}, 400);
@@ -182,13 +182,4 @@
             }
         });
     });
-    function formatInsertTime() {
-        function format(date) {
-            return date.toString().length > 1 ? date : '0' + date;
-        }
-        var weekSet = ['日', '一', '二', '三', '四', '五', '六'];
-        var raw = new Date();
-        var month = (raw.getMonth() + 1).toString().length > 1 ? raw.getMonth() + 1 : '0'+(raw.getMonth()+1);
-        return raw.getFullYear() + '年' + month + '月' + format(raw.getDate()) + '日 星期' + weekSet[raw.getDay()] + ' '+ format(raw.getHours()) + ':' + format(raw.getMinutes()) + ':' + format(raw.getSeconds());
-    }
 </script>
