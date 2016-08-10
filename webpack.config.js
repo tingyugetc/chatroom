@@ -1,7 +1,7 @@
-var webpack = require('webpack');
-var path = require('path');
-var ROOT_PATH = path.resolve(__dirname);
-var APP_PATH = path.resolve(ROOT_PATH, 'public');
+const webpack = require('webpack');
+const path = require('path');
+const ROOT_PATH = path.resolve(__dirname);
+const APP_PATH = path.resolve(ROOT_PATH, 'public');
 module.exports = {
     cache: true,
     entry: {
@@ -11,10 +11,13 @@ module.exports = {
         path: 'public/build',
         filename: 'bundle.js'
     },
+    devtool: 'eval-source-map',
     module: {
-        // preLoaders:[{
-
-        // }],
+        preLoaders: [{
+            test: /\.js$/,
+            loader: "eslint-loader",
+            include: APP_PATH,
+        }],
         loaders: [{
             test: /\.css$/,
             loaders: ['style', 'css'],
@@ -31,7 +34,11 @@ module.exports = {
             }
         }, ]
     },
-    // plugins: [
-    //     new webpack.optimize.CommonsChunkPlugin('common.js')
-    // ]
+    plugins: [
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false,
+            }
+        })
+    ]
 };
