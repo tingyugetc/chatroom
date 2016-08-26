@@ -12,8 +12,8 @@ html {
     width: 100%;
 }
 
-.m input,
-.s input {
+.m textarea,
+.s textarea {
     border: 0;
     padding: .625rem;
     width: 90%;

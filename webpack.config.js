@@ -4,7 +4,6 @@ const ROOT_PATH = path.resolve(__dirname);
 const APP_PATH = path.resolve(ROOT_PATH, 'public');
 const precss = require('precss');
 const autoprefixer = require('autoprefixer');
-
 module.exports = {
     cache: true,
     entry: {
@@ -44,5 +43,4 @@ module.exports = {
             }
         })
     ],
-
 };
