@@ -36,7 +36,7 @@ module.exports = {
         }, ]
     },
     postcss: () => [precss, autoprefixer],
-    plugins: [
+    plugins:[
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false,
