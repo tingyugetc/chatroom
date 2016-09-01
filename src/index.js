@@ -1,5 +1,5 @@
-// import '../public/css/style.css';
-// import '../public/css/index.css';
-require('../public/css/style.css');
-require('../public/css/index.css');
+// import '../public/css/style.scss';
+// import '../public/css/index.scss';
+require('../public/css/style.scss');
+require('../public/css/index.scss');
 require('../public/js/index.js');

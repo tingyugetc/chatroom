@@ -1,5 +1,8 @@
 在线多人聊天室
 
+# 演示地址
+[http://socket.fengyuanzemin.com](http://socket.fengyuanzemin.com)
+
 # 安装
 ## 安装依赖
 	npm install
@@ -26,9 +29,6 @@
 	forever start app.js
 ## 关闭
 	forever stop app.js
-
-# 演示地址
-[http://socket.fengyuanzemin.com](http://socket.fengyuanzemin.com)
 
 # 技术
 
@@ -62,6 +62,5 @@ socket.on('login',function(obj){
 * 像qq一样，自己的气泡在右边，别人的气泡在左边
 * 自己的气泡固定一种颜色，别人的随机颜色。后面可以选择颜色
 * 可以选择头像
-* 使用Webpack进行自动化构建
 * 使用react
 * 使用ES6
