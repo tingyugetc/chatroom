@@ -46,10 +46,10 @@ function formatInsertTime() {
 }
 
 // mongoose
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 // Use native promises
-mongoose.Promise = global.Promise;
-const Message = mongoose.model('Message');
+// mongoose.Promise = global.Promise;
+// const Message = mongoose.model('Message');
 
 // 设置模板引擎
 app.set('views', path.join(__dirname, 'views/'));
@@ -118,20 +118,20 @@ io.on('connection', socket => {
             });
             if (i >= 0) {
                 // 存入mongoose
-                const a = new Message({
-                    name: users[i].name,
-                    image: `/imgs/${users[i].avatar}.jpg`,
-                    content: msg,
-                    createdAt: formatInsertTime(),
-                });
-                const promise = a.save();
-                promise.then(() => {
+                // const a = new Message({
+                //     name: users[i].name,
+                //     image: `/imgs/${users[i].avatar}.jpg`,
+                //     content: msg,
+                //     createdAt: formatInsertTime(),
+                // });
+                // const promise = a.save();
+                // promise.then(() => {
                     io.emit('chat message', {
                         user: users[i],
                         msg: md.render(msg),
                         createdAt: formatInsertTime(),
                     });
-                });
+                // });
             }
         }
     });
