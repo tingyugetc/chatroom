@@ -17,6 +17,13 @@ $(() => {
         const name = value;
         if ($.trim(name).length > 0) {
             $('#m').focus();
+            $('#m').keypress((event) => {
+                if (event.keyCode == 13) {
+                    console.log('enter');
+                    $('button').click();
+                }
+            });
+
             // 聊天开始
             const socket = io();
             // 定义一个私聊公聊的变量吧
