@@ -70,9 +70,9 @@ li {
 
   .avatar {
     width: 4.44rem;
-    height: 7.19rem;
+    // height: 7.19rem;
     cursor: pointer;
-    margin: 0 50px 0 10px;
+    margin: 0 10px 0 0px;
   }
 
   .chat {
@@ -114,4 +114,11 @@ li {
 
 .whisper-color {
   background-color: #9e9e9e;
+}
+
+.right-chat {
+  justify-content: flex-end;
+  .avatar {
+    margin: 0 0 0 10px;
+  }
 }

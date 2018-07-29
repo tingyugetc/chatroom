@@ -87,16 +87,16 @@ app.use((req, res) => {
 });
 
 io.on('connection', socket => {
-    socket.on('user connection', msg => {
+    socket.on('client_connection', msg => {
         // 有一个客户端建立连接后，就把该用户加入数组里
-        const m = xss(msg);
+        const clientName = xss(msg);
         const avatar = Math.floor(Math.random() * 13 + 1);
         users.push({
             id: socket.id,
-            name: m,
+            name: clientName,
             avatar,
         });
-        io.emit('hi', `${m} 加入聊天室，当前在线人数 ${users.length}`);
+        io.emit('server_notice', `${clientName} 加入聊天室，当前在线人数 ${users.length}`);
     });
 
     socket.on('disconnect', () => {
@@ -107,11 +107,11 @@ io.on('connection', socket => {
         if (i >= 0) {
             const user = users[i];
             _.remove(users, u => u.id === socket.id);
-            io.emit('hi', `${user.name} 离开了聊天室，当前在线人数 ${users.length}`);
+            io.emit('server_notice', `${user.name} 离开了聊天室，当前在线人数 ${users.length}`);
         }
     });
 
-    socket.on('chat message', msg => {
+    socket.on('client_chat', msg => {
         if (msg) {
             const i = _.findIndex(users, {
                 id: socket.id,
@@ -126,7 +126,7 @@ io.on('connection', socket => {
                 // });
                 // const promise = a.save();
                 // promise.then(() => {
-                    io.emit('chat message', {
+                    io.emit('client_chat', {
                         user: users[i],
                         msg: md.render(msg),
                         createdAt: formatInsertTime(),
